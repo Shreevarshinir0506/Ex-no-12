@@ -1,0 +1,114 @@
+PROGRAM 1
+
+import java.util.Arrays;
+
+class ArrayOperations<T> {
+    private T[] array;
+    private int size;
+
+    public ArrayOperations(int capacity) {
+        this.array = (T[]) new Object[capacity];
+        this.size = 0;
+    }
+
+    public void addElementAtBeginning(T element) {
+        ensureCapacity();
+        System.arraycopy(array, 0, array, 1, size);
+        array[0] = element;
+        size++;
+    }
+
+    public void addElementAtMiddle(T element, int position) {
+        ensureCapacity();
+        System.arraycopy(array, position, array, position + 1, size - position);
+        array[position] = element;
+        size++;
+    }
+
+    public void addElementAtEnd(T element) {
+        ensureCapacity();
+        array[size++] = element;
+    }
+
+    public void deleteElement(int position) {
+        if (position < 0 || position >= size) {
+            throw new IllegalArgumentException("Invalid position");
+        }
+
+        System.arraycopy(array, position + 1, array, position, size - position - 1);
+        size--;
+    }
+
+    private void ensureCapacity() {
+        if (size == array.length) {
+            array = Arrays.copyOf(array, 2 * size);
+        }
+    }
+
+    public void printArray() {
+        System.out.println(Arrays.toString(array));
+    }
+}
+
+public class GenericArrayOperationsDemo {
+    public static void main(String[] args) {
+        ArrayOperations<Integer> arrayOps = new ArrayOperations<>(5);
+
+      
+        arrayOps.addElementAtEnd(10);
+        arrayOps.addElementAtEnd(20);
+        arrayOps.addElementAtEnd(30);
+        System.out.println("Original Array:");
+        arrayOps.printArray();
+
+        arrayOps.addElementAtBeginning(5);
+
+        
+        arrayOps.addElementAtMiddle(15, 2);
+
+      
+        System.out.println("\nArray after adding elements:");
+        arrayOps.printArray();
+
+        arrayOps.deleteElement(1);
+
+        
+        System.out.println("\nArray after deleting an element:");
+        arrayOps.printArray();
+    }
+}
+
+PROGRAM 2
+
+public class GenericMinFinder {
+
+    public static <T extends Comparable<T>> T findMin(T[] array) {
+        if (array == null || array.length == 0) {
+            throw new IllegalArgumentException("Array is empty or null");
+        }
+
+        T min = array[0];
+
+        for (T element : array) {
+            if (element.compareTo(min) < 0) {
+                min = element;
+            }
+        }
+
+        return min;
+    }
+
+    public static void main(String[] args) {
+        Integer[] intArray = {5, 3, 8, 2, 7, 1};
+        Integer minInt = findMin(intArray);
+        System.out.println("Minimum Integer: " + minInt);
+
+        Double[] doubleArray = {2.5, 1.2, 3.8, 0.7, 4.2};
+        Double minDouble = findMin(doubleArray);
+        System.out.println("Minimum Double: " + minDouble);
+
+        String[] stringArray = {"apple", "banana", "orange", "kiwi", "grape"};
+        String minString = findMin(stringArray);
+        System.out.println("Minimum String: " + minString);
+    }
+}
